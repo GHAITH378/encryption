@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام التشفير C++</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; color: #333; }
+        .container { background-color: rgba(255, 255, 255, 0.95); border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); width: 90%; max-width: 700px; padding: 30px; text-align: center; }
+        h1 { color: #1a2a6c; margin-bottom: 10px; font-size: 32px; }
+        .description { color: #555; margin-bottom: 30px; font-size: 16px; line-height: 1.6; }
+        .input-group { margin-bottom: 25px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; font-size: 18px; }
+        textarea, select { width: 100%; padding: 12px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; transition: border-color 0.3s; resize: vertical; }
+        textarea:focus, select:focus { border-color: #1a2a6c; outline: none; }
+        button { background: linear-gradient(to right, #1a2a6c, #b21f1f); color: white; border: none; padding: 14px 25px; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: 600; transition: transform 0.2s, box-shadow 0.2s; width: 100%; margin: 10px 0; }
+        button:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
+        button:active { transform: translateY(0); }
+        .result-container { margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; border-right: 5px solid #1a2a6c; text-align: right; }
+        .result-title { font-weight: 600; margin-bottom: 10px; color: #1a2a6c; font-size: 20px; }
+        #result { font-size: 18px; word-break: break-word; line-height: 1.6; color: #333; }
+        .info-box { background-color: #e8f4fd; border-radius: 8px; padding: 15px; margin-top: 20px; text-align: right; border-right: 4px solid #1a2a6c; }
+        .info-title { font-weight: 600; color: #1a2a6c; margin-bottom: 10px; }
+        .info-content { line-height: 1.6; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>نظام التشفير</h1>
+        <p class="description">أدخل النص الذي تريد تشفيره أو فك تشفيره باستخدام خوارزمية C++</p>
+        <div class="input-group">
+            <label for="textInput">النص المدخل:</label>
+            <textarea id="textInput" rows="4" placeholder="أدخل النص هنا..."></textarea>
+        </div>
+        <div class="input-group">
+            <label for="modeSelect">وضع التشغيل:</label>
+            <select id="modeSelect">
+                <option value="0">تشفير (0)</option>
+                <option value="1">فك التشفير (1)</option>
+            </select>
+        </div>
+        <button id="processBtn">معالجة النص</button>
+        <div class="result-container" style="display: none;" id="resultContainer">
+            <div class="result-title">النتيجة:</div>
+            <div id="result"></div>
+        </div>
+        <div class="info-box">
+            <div class="info-title">معلومات حول البرنامج:</div>
+            <div class="info-content">
+                هذا البرنامج يحاكي خوارزمية التشفير المكتوبة بلغة C++.<br>
+                - الوضع 0: يستخدم للتشفير<br>
+                - الوضع 1: يستخدم لفك التشفير<br>
+                يتم استخدام مصفوفة ثابتة للتحويل بين الأحرف.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bord = ['a','9','m','A','A','s','X','1','J','d','B','6','D','O','C','t','l','B','E','8','P','X','F','E','G','Z','S','Y','T','y','H','z','I','0','V','o','i','5','x','3','K','D','L',' ','f','p','b','q','d','4','2','r','M','v','N','l','g','C','O','F','R','2','c','g','0','7','j','S','9','R','Q','m',' ','k','W','j','U','n','4','G','s','x','Z','w','Y','c','y','U','e','f','6','I','h','W','r','b','k','H','n','K','o','L','p','i','7','u','5','M','1','J','q','N','8','P','t','h','3','Q','z','V','u','e','v','a','w','T'];
+
+        function recrch(fd, mod) {
+            let k = 0;
+            for(k = 0; k < 63; k++) {
+                if(fd === bord[2*k + parseInt(mod)]) { break; }
+            }
+            return bord[2*k + (-1 * parseInt(mod) + 1)];
+        }
+
+        function processText() {
+            const textInput = document.getElementById('textInput').value;
+            const modeSelect = document.getElementById('modeSelect').value;
+            const resultContainer = document.getElementById('resultContainer');
+            const resultElement = document.getElementById('result');
+            
+            if (!textInput) { alert('يرجى إدخال نص للمعالجة'); return; }
+            
+            let output = '';
+            for(let i = 0; i < textInput.length; i++) {
+                output += recrch(textInput[i], modeSelect);
+            }
+            
+            resultElement.textContent = output;
+            resultContainer.style.display = 'block';
+        }
+
+        document.getElementById('processBtn').addEventListener('click', processText);
+        document.getElementById('textInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') { processText(); }
+        });
+    </script>
+</body>
+</html>
